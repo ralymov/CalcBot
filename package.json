@@ -1,0 +1,18 @@
+{
+  "name": "SimpleCalcBot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/HitTheNails/SimpleCalcBot.git",
+  "author": "Roman Alymov",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2"
+  }
+}
