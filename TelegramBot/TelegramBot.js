@@ -12,6 +12,7 @@ class TelegramBot {
     this.options.polling = (typeof options.polling === 'undefined') ? false : options.polling;
     this.options.webHook = (typeof options.webHook === 'undefined') ? false : options.webHook;
     
+    this._webServer = express();
     // if (options.polling) {
     //   const autoStart = options.polling.autoStart;
     //   if (typeof autoStart === 'undefined' || autoStart === true) {
@@ -92,53 +93,39 @@ class TelegramBot {
   
   
   openWebHook() {
-    app.post('/new-message', function (req, res) {
+    const bot = this;
+    this._webServer.post('/new-message', function (req, res) {
       const {callback_query, message} = req.body;
       console.log(req.body);
+      console.log('callback_query: ' + callback_query);
+      console.log('message: ' + message);
       if (callback_query) {
-        this.editMessage(callback_query.message, callback_query.data);
+        bot.editMessage(callback_query.message, callback_query.data);
         res.end('ok');
-      }
-      if (message) {
-        this.sendMessage(message);
+      } else if (message) {
+        bot.sendMessage(message);
+        res.end('ok');
+      } else {
         res.end('ok');
       }
     });
   }
   
   startBot() {
-    const app = express();
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({
+    const bot = this;
+    bot._webServer.use(bodyParser.json());
+    bot._webServer.use(bodyParser.urlencoded({
       extended: true
     }));
-    const bot = this;
     
-    app.listen(process.env.PORT || 3000, function () {
+    bot._webServer.listen(process.env.PORT || 3000, function () {
       console.log('Telegram app listening on port 3000!');
-      
       if (bot.options.polling) {
         bot.startPolling();
       }
-      
       if (bot.options.webHook) {
-        app.post('/new-message', function (req, res) {
-          const {callback_query, message} = req.body;
-          console.log(req.body);
-          console.log('callback_query: ' + callback_query);
-          console.log('message: ' + message);
-          if (callback_query) {
-            bot.editMessage(callback_query.message, callback_query.data);
-            res.end('ok');
-          } else if (message) {
-            bot.sendMessage(message);
-            res.end('ok');
-          } else {
-            res.end('ok');
-          }
-        });
+        bot.openWebHook();
       }
-      
     });
   }
   

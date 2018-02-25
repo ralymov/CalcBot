@@ -1,15 +1,6 @@
 "use strict";
 require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const axios = require('axios');
 const TelegramBot = require('./TelegramBot/TelegramBot.js');
-const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 
 const token = process.env.TELEGRAM_TOKEN;
 const options = {
@@ -22,8 +13,8 @@ const options = {
       [{text: '0', callback_data: '0'}]
     ],
   },
-  // webHook: true,
-  polling: true,
+  webHook: true,
+  // polling: true,
 };
 const TelegramBotTest = new TelegramBot(token, options);
 TelegramBotTest.startBot();
