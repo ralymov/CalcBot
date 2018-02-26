@@ -106,9 +106,10 @@ class TelegramBot {
       } else if (message) {
         bot.sendMessage(message);
       }
+      res.sendStatus(200);
     });
     this._webServer.get('/', function (req, res) {
-      res.send('hello world i am a secret bot')
+      res.sendStatus(200);
     })
   }
   
