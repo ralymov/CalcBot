@@ -98,7 +98,7 @@ class TelegramBot {
   
   openWebHook() {
     const bot = this;
-    this._webServer.post('/new-message', function (req, res) {
+    this._webServer.post(bot.options.webHook.method, function (req, res) {
       const {callback_query, message} = req.body;
       if (callback_query) {
         bot.editMessage(callback_query.message, callback_query.data);
@@ -124,11 +124,13 @@ class TelegramBot {
       console.log('Telegram app listening on port 3000!');
       if (bot.options.polling) {
         console.log('Bot started in polling mode');
-        bot.setWebhook().then(() => bot.startPolling());
+        bot.setWebhook()
+          .then(() => bot.startPolling());
       }
       if (bot.options.webHook) {
         console.log('Bot started in webhook mode');
-        bot.setWebhook(bot.options.webHook.url).then(() => bot.openWebHook());
+        bot.setWebhook(bot.options.webHook.url + bot.options.webHook.method)
+          .then(() => bot.openWebHook());
       }
     });
   }

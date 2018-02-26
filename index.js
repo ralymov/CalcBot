@@ -15,7 +15,7 @@ const options = {
   },
   webHook: {
     url: 'https://murmuring-eyrie-76459.herokuapp.com',
-    method: /new_message',
+    method: '/new_message',
   },
   // polling: true,
 };
