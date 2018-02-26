@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 class TelegramBot {
+  
   constructor(token = null, options = {}) {
     this.token = token;
     this.url = `https://api.telegram.org/bot${this.token}`;
@@ -15,11 +16,11 @@ class TelegramBot {
     this._webServer = express();
   }
   
-  sendMessage(message) {
+  sendMessage(message, text='0') {
     console.time('sendMessage');
     axios.post(`${this.url}/sendMessage`, {
       chat_id: message.chat.id,
-      text: '0',
+      text: text,
       reply_markup: this.options.reply_markup,
     })
       .then(response => console.timeEnd('sendMessage'))
