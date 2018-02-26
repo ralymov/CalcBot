@@ -22,12 +22,8 @@ class TelegramBot {
       text: '0',
       reply_markup: this.options.reply_markup,
     })
-      .then(response => {
-        console.timeEnd('sendMessage');
-      })
-      .catch(error => {
-        console.log('Error :', error);
-      })
+      .then(response => console.timeEnd('sendMessage'))
+      .catch(error => console.log(`Error: ${error}`));
   }
   
   editMessage(message, text = '0') {
@@ -46,35 +42,43 @@ class TelegramBot {
       text: new_text,
       reply_markup: this.options.reply_markup,
     })
-      .then(response => {
-        console.timeEnd('editMessage');
-      })
-      .catch(error => {
-        console.log('Error :', error);
-      })
+      .then(response => console.timeEnd('editMessage'))
+      .catch(error => console.log(`Error: ${error}`));
   }
   
   answerCallbackQuery(callback_query = null) {
     console.time('answerCallbackQuery');
     const callback_query_id = callback_query.id;
     axios.post(`${this.url}/answerCallbackQuery`, {
-      callback_query_id: callback_query_id,
+      callback_query_id: callback_query_id
     })
-      .then(response => {
-        console.timeEnd('answerCallbackQuery');
+      .then(response => console.timeEnd('answerCallbackQuery'))
+      .catch(error => console.log(`Error: ${error}`));
+  }
+  
+  setWebhook(url = '') {
+    return new Promise((resolve, reject) => {
+      console.time('setWebhook');
+      axios.post(`${this.url}/setWebhook`, {
+        url: url
       })
-      .catch(error => {
-        console.log('Error :', error);
-      })
+        .then(response => {
+          console.timeEnd('setWebhook');
+          resolve();
+        })
+        .catch(error => {
+          console.log(`Error: ${error}`);
+          reject();
+        });
+    });
   }
   
   startPolling(offset = null) {
-    axios.post(`https://api.telegram.org/bot${this.token}/getUpdates`,
-      {
-        timeout: 30000,
-        offset: offset,
-        limit: 1,
-      })
+    axios.post(`https://api.telegram.org/bot${this.token}/getUpdates`, {
+      timeout: 30000,
+      offset: offset,
+      limit: 1,
+    })
       .then(response => {
         if (response.data.result[0]) {
           offset = response.data.result[0].update_id + 1;
@@ -89,16 +93,12 @@ class TelegramBot {
         }
       })
       .catch(error => console.log(error))
-      .then(() => {
-        this.startPolling(offset);
-      });
+      .then(() => this.startPolling(offset));
   }
-  
   
   openWebHook() {
     const bot = this;
     this._webServer.post('/new-message', function (req, res) {
-      console.log(req.body);
       const {callback_query, message} = req.body;
       if (callback_query) {
         bot.editMessage(callback_query.message, callback_query.data);
@@ -124,11 +124,11 @@ class TelegramBot {
       console.log('Telegram app listening on port 3000!');
       if (bot.options.polling) {
         console.log('Bot started in polling mode');
-        bot.startPolling();
+        bot.setWebhook().then(() => bot.startPolling());
       }
       if (bot.options.webHook) {
         console.log('Bot started in webhook mode');
-        bot.openWebHook();
+        bot.setWebhook(bot.options.webHook.url).then(() => bot.openWebHook());
       }
     });
   }

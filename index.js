@@ -13,7 +13,10 @@ const options = {
       [{text: '0', callback_data: '0'}]
     ],
   },
-  webHook: true,
+  webHook: {
+    url: 'https://murmuring-eyrie-76459.herokuapp.com',
+    method: /new_message',
+  },
   // polling: true,
 };
 const TelegramBotTest = new TelegramBot(token, options);
