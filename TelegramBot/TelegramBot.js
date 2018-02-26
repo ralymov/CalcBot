@@ -98,6 +98,7 @@ class TelegramBot {
   openWebHook() {
     const bot = this;
     this._webServer.post('/new-message', function (req, res) {
+      console.log(req.body);
       const {callback_query, message} = req.body;
       if (callback_query) {
         bot.editMessage(callback_query.message, callback_query.data);
@@ -106,6 +107,9 @@ class TelegramBot {
         bot.sendMessage(message);
       }
     });
+    this._webServer.get('/', function (req, res) {
+      res.send('hello world i am a secret bot')
+    })
   }
   
   startBot() {
