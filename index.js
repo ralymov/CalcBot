@@ -13,8 +13,8 @@ const options = {
       [{text: '0', callback_data: '0'}]
     ],
   },
-  // webHook: true,
-  polling: true,
+  webHook: true,
+  // polling: true,
 };
 const TelegramBotTest = new TelegramBot(token, options);
 TelegramBotTest.startBot();
