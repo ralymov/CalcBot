@@ -13,20 +13,6 @@ class TelegramBot {
     this.options.webHook = (typeof options.webHook === 'undefined') ? false : options.webHook;
     
     this._webServer = express();
-    // if (options.polling) {
-    //   const autoStart = options.polling.autoStart;
-    //   if (typeof autoStart === 'undefined' || autoStart === true) {
-    //     this.startPolling();
-    //   }
-    // }
-    //
-    // if (options.webHook) {
-    //   const autoOpen = options.webHook.autoOpen;
-    //   if (typeof autoOpen === 'undefined' || autoOpen === true) {
-    //     this.openWebHook();
-    //   }
-    // }
-    
   }
   
   sendMessage(message) {
@@ -96,9 +82,6 @@ class TelegramBot {
     const bot = this;
     this._webServer.post('/new-message', function (req, res) {
       const {callback_query, message} = req.body;
-      console.log(req.body);
-      console.log('callback_query: ' + callback_query);
-      console.log('message: ' + message);
       if (callback_query) {
         bot.editMessage(callback_query.message, callback_query.data);
         res.end('ok');
