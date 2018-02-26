@@ -30,14 +30,14 @@ class TelegramBot {
   }
   
   sendMessage(message) {
-    console.log('sendMessage');
+    console.time('sendMessage');
     axios.post(`${this.url}/sendMessage`, {
       chat_id: message.chat.id,
       text: '0',
       reply_markup: this.options.reply_markup,
     })
       .then(response => {
-        console.log('sendMessage posted');
+        console.timeEnd('sendMessage');
       })
       .catch(error => {
         console.log('Error :', error);
@@ -45,7 +45,7 @@ class TelegramBot {
   }
   
   editMessage(message, text = '0') {
-    console.log('editMessage');
+    console.time('editMessage');
     const chat_id = message.chat.id;
     const message_id = message.message_id;
     
@@ -61,7 +61,7 @@ class TelegramBot {
       reply_markup: this.options.reply_markup,
     })
       .then(response => {
-        console.log('editMessage posted');
+        console.timeEnd('editMessage');
       })
       .catch(error => {
         console.log('Error :', error);
@@ -69,13 +69,13 @@ class TelegramBot {
   }
   
   answerCallbackQuery(callback_query = null) {
-    console.log('answerCallbackQuery');
+    console.time('answerCallbackQuery');
     const callback_query_id = callback_query.id;
     axios.post(`${this.url}/answerCallbackQuery`, {
       callback_query_id: callback_query_id,
     })
       .then(response => {
-        console.log('answerCallbackQuery posted');
+        console.timeEnd('answerCallbackQuery');
       })
       .catch(error => {
         console.log('Error :', error);
