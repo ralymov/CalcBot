@@ -118,9 +118,11 @@ class TelegramBot {
     bot._webServer.listen(process.env.PORT || 3000, function () {
       console.log('Telegram app listening on port 3000!');
       if (bot.options.polling) {
+        console.log('Bot started in polling mode');
         bot.startPolling();
       }
       if (bot.options.webHook) {
+        console.log('Bot started in webhook mode');
         bot.openWebHook();
       }
     });
