@@ -16,14 +16,14 @@ class TelegramBot {
   }
   
   sendMessage(message) {
-    console.log('sendMessage');
+    console.time('sendMessage');
     axios.post(`${this.url}/sendMessage`, {
       chat_id: message.chat.id,
       text: '0',
       reply_markup: this.options.reply_markup,
     })
       .then(response => {
-        console.log('Message posted');
+        console.timeEnd('sendMessage');
       })
       .catch(error => {
         console.log('Error :', error);
@@ -31,13 +31,15 @@ class TelegramBot {
   }
   
   editMessage(message, text = '0') {
-    console.log('editMessage');
+    console.time('editMessage');
     const chat_id = message.chat.id;
     const message_id = message.message_id;
+    
     let new_text;
     if (text === 'AC') new_text = '0';
     else if (message.text === '0') new_text = text;
     else new_text = message.text + text;
+    
     axios.post(`${this.url}/editMessageText`, {
       chat_id: chat_id,
       message_id: message_id,
@@ -45,7 +47,21 @@ class TelegramBot {
       reply_markup: this.options.reply_markup,
     })
       .then(response => {
-        console.log('Message posted');
+        console.timeEnd('editMessage');
+      })
+      .catch(error => {
+        console.log('Error :', error);
+      })
+  }
+  
+  answerCallbackQuery(callback_query = null) {
+    console.time('answerCallbackQuery');
+    const callback_query_id = callback_query.id;
+    axios.post(`${this.url}/answerCallbackQuery`, {
+      callback_query_id: callback_query_id,
+    })
+      .then(response => {
+        console.timeEnd('answerCallbackQuery');
       })
       .catch(error => {
         console.log('Error :', error);
@@ -65,6 +81,7 @@ class TelegramBot {
           const {callback_query, message} = response.data.result[0];
           if (callback_query) {
             this.editMessage(callback_query.message, callback_query.data);
+            this.answerCallbackQuery(callback_query);
           }
           if (message) {
             this.sendMessage(message);
@@ -84,13 +101,10 @@ class TelegramBot {
       const {callback_query, message} = req.body;
       if (callback_query) {
         bot.editMessage(callback_query.message, callback_query.data);
-        res.end('ok');
       } else if (message) {
         bot.sendMessage(message);
-        res.end('ok');
-      } else {
-        res.end('ok');
       }
+      res.sendStatus(403);
     });
   }
   
