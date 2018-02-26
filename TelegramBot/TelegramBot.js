@@ -101,10 +101,10 @@ class TelegramBot {
       const {callback_query, message} = req.body;
       if (callback_query) {
         bot.editMessage(callback_query.message, callback_query.data);
+        bot.answerCallbackQuery(callback_query);
       } else if (message) {
         bot.sendMessage(message);
       }
-      res.sendStatus(403);
     });
   }
   
