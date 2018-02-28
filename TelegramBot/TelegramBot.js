@@ -2,6 +2,8 @@
 const axios = require('axios');
 const express = require('express');
 const bodyParser = require('body-parser');
+// const MongoClient = require('mongodb').MongoClient;
+const math = require('mathjs');
 
 class TelegramBot {
   
@@ -16,7 +18,7 @@ class TelegramBot {
     this._webServer = express();
   }
   
-  sendMessage(message, text='0') {
+  sendMessage(message, text = '0') {
     console.time('sendMessage');
     axios.post(`${this.url}/sendMessage`, {
       chat_id: message.chat.id,
@@ -33,7 +35,8 @@ class TelegramBot {
     const message_id = message.message_id;
     
     let new_text;
-    if (text === 'AC') new_text = '0';
+    if (text === '=') new_text = this.calculate(message.text);
+    else if (text === 'AC') new_text = '0';
     else if (message.text === '0') new_text = text;
     else new_text = message.text + text;
     
@@ -55,6 +58,10 @@ class TelegramBot {
     })
       .then(response => console.timeEnd('answerCallbackQuery'))
       .catch(error => console.log(`Error: ${error}`));
+  }
+  
+  calculate(expression = '') {
+    return math.eval(expression);
   }
   
   setWebhook(url = '') {
@@ -81,6 +88,7 @@ class TelegramBot {
       limit: 1,
     })
       .then(response => {
+        console.log(this.calculate('12 / (2.3 + 0.7)'));
         if (response.data.result[0]) {
           offset = response.data.result[0].update_id + 1;
           const {callback_query, message} = response.data.result[0];
