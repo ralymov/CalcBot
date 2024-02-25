@@ -1,5 +1,5 @@
 {
-  "name": "SimpleCalcBot",
+  "name": "simple-calc-bot",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/HitTheNails/SimpleCalcBot.git",
@@ -10,6 +10,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "astu-service-desk": "^1.0.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
     "dotenv": "^5.0.0",
