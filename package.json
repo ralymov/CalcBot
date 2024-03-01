@@ -1,11 +1,11 @@
 {
   "name": "simple-calc-bot",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
-  "repository": { 
-    "type": "git", 
-    "url": "https://github.com/ralymov/CalcBot.git" 
-  }, 
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ralymov/CalcBot.git"
+  },
   "author": "Roman Alymov",
   "license": "Apache-2.0",
   "scripts": {
